@@ -6,6 +6,7 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import userRoute from './routes/userRoutes.js'
+import "./db/conn.js"
 
 
 const app = express()

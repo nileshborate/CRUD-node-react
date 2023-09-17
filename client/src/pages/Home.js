@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import axios from "axios"
 import './Home.css'
+import { toast } from 'react-toastify'
 
 const Home = () => {
 
   const [data,setData] = useState([]);
+  const navigate = useNavigate()
 
   const getUsers = async() => {
     const response = await axios.get("http://localhost:5000/users")
@@ -17,6 +20,12 @@ const Home = () => {
   useEffect(()=>{
     getUsers();
   },[])
+
+  const deleteUser = async(id) => {
+    const response = await axios.delete(`http://localhost:5000/user/${id}`)
+    toast.success(response.data)
+    window.location.reload();
+  }
 
   return (
     <div style={{marginTop : "150px"}}>
@@ -35,10 +44,19 @@ const Home = () => {
           data && data.map((item,index) => {
             return (
               <tr key={index}>
-                <th scope="row">{index+1}</th>
-                <th>{item.name}</th>
-                <th>{item.email}</th>
-                <th>{item.mobile}</th>
+                <td scope="row">{index+1}</td>
+                <td>{item.name}</td>
+                <td>{item.email}</td>
+                <td>{item.mobile}</td>
+                <td>
+                  <Link to={`/update/${item.id}`} className="btn btn-edit">
+                      Edit
+                  </Link>
+                  <button className='btn btn-delete' onClick={() => deleteUser(item.id)}>Delete</button>
+                  <Link to={`/view/${item.id}`} className="btn btn-view">
+                      View
+                  </Link>
+                </td>
               </tr>
             );
           })} 
